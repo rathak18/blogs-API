@@ -60,7 +60,7 @@ exports.updatePostById = async (req, res) => {
   }
 };
 
-// Controller to delete a blog pos
+// Controller to delete a blog post
 exports.deletePostById = async (req, res) => {
     try {
       const postId = req.params.id;
