@@ -16,17 +16,50 @@ exports.createPost = async (req, res) => {
 };
 
 // Controller to get all blog posts
-exports.getAllPosts = async (req, res,next) => {
+exports.getAllPosts = async (req, res, next) => {
   try {
-    const posts = await Post.find({}, { title: 1, content: 1, author: 1, _id: 1, createdAt: 1 });
+    // Extract title, content, author, blogId, page, and limit from the request query
+    const { title, content, author, blogId, page = 1, limit = 10 } = req.body;
+
+    // Validate page and limit
+    if (page < 1 || limit < 1) {
+      return res.status(400).json({ message: "Invalid page or limit values" });
+    }
+
+    // Calculate the skip value for pagination
+    const skip = (page - 1) * limit;
+
+    // Build the filter object based on the provided parameters
+    const filter = {};
+    if (title) {
+      filter.title = { $regex: title, $options: 'i' }; // Case-insensitive search using regex
+    }
+    if (content) {
+      filter.content = { $regex: content, $options: 'i' };
+    }
+    if (author) {
+      filter.author = { $regex: author, $options: 'i' };
+    }
+    if (blogId) {
+      filter._id = blogId;
+    }
+
+    // Fetch posts based on the constructed filter with pagination
+    const posts = await Post.find(filter, { title: 1, content: 1, author: 1, _id: 1, createdAt: 1 })
+      .skip(skip)
+      .limit(limit);
+
     if (!posts.length) {
       return res.status(404).json({ message: "Blogs not available" });
-    } 
+    }
+
     res.status(200).json({ message: "Blogs fetched successfully", posts });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 exports.getAllBlogsDatewise = async (req, res) => {
   // Add your implementation for fetching blogs date-wise
