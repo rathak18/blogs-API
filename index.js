@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const postRoutes = require('./routes/post.js');
+const customMiddleware = require('./middleware/auth.js'); // Adjust the path accordingly
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
@@ -18,7 +19,6 @@ mongoose.connect(process.env.MONGODB_URI)
   .catch((err) => {
     console.log("error connecting db", err);
   });
-
 
 // Middleware
 app.use(bodyParser.json());
