@@ -2,12 +2,16 @@
 const express = require('express');
 const router = express.Router();
 const postController = require('../controllers/post.js');
+const customMiddleware = require('../middleware/auth.js'); // Adjust the path accordingly
+
+
+// Custom middleware for get, update, and delete routes
 
 // Create a new blog post
 router.post('/addBlog', postController.createPost);
 
 // Get all blog posts
-router.get('/getAllBlogs', postController.getAllPosts);
+router.get('/getAllBlogs',customMiddleware, postController.getAllPosts);
 
 // Get a specific blog post by ID
 router.get('/getBlog/:id', postController.getPostById);
