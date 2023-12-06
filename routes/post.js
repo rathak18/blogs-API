@@ -13,6 +13,9 @@ router.post('/addBlog', postController.createPost);
 // Get all blog posts
 router.get('/getAllBlogs',customMiddleware, postController.getAllPosts);
 
+// Get all blog posts datewise
+router.get('/getAllBlogsDatewise',customMiddleware,postController.getAllBlogsDatewise);
+
 // Get a specific blog post by ID
 router.get('/getBlog/:id', postController.getPostById);
 

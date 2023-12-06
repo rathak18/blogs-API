@@ -62,8 +62,45 @@ exports.getAllPosts = async (req, res, next) => {
 
 
 exports.getAllBlogsDatewise = async (req, res) => {
-  // Add your implementation for fetching blogs date-wise
+  try {
+    // Extract date and toDate parameters from the request query
+    const { fromDate, toDate } = req.body;
+
+    // Validate date and toDate parameters
+    if (!fromDate || !toDate) {
+      return res.status(400).json({ message: "Both date and toDate parameters are required" });
+    }
+
+    // Parse the date strings into Date objects
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+
+    // Validate that startDate is before or equal to endDate
+    if (startDate > endDate) {
+      return res.status(400).json({ message: "startDate must be before or equal to endDate" });
+    }
+
+    // Build the filter object based on the date range
+    const filter = {
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    };
+
+    // Fetch posts based on the constructed filter
+    const posts = await Post.find(filter, { title: 1, content: 1, author: 1, _id: 1, createdAt: 1 });
+
+    if (!posts.length) {
+      return res.status(404).json({ message: "No blogs found within the specified date range" });
+    }
+
+    res.status(200).json({ message: "Blogs fetched successfully", posts });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
+
 
 // Controller to get a specific blog post by ID
 exports.getPostById = async (req, res) => {
