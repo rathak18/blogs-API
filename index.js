@@ -6,14 +6,12 @@ const postRoutes = require('./routes/post.js');
 const userRoutes = require('./routes/user.js');
 const helmet = require('helmet');
 const cors = require('cors'); // Import the cors middleware
+const morgan = require('morgan');
 const { globalLimiter, specificLimiter } = require('./utils/rateLimiter.js')
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// Connect to MongoDB
-console.log("MongoDB URI:", process.env.MONGODB_URI);
 
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
@@ -30,6 +28,9 @@ app.use(globalLimiter)
 
 // Enable CORS for all routes
 app.use(cors());
+
+// Use the "combined" pre-defined format
+app.use(morgan('combined'));
 
 // Routes
 app.use('/api', postRoutes);

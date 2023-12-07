@@ -21,8 +21,7 @@ exports.getAllPosts = async (req, res, next) => {
   try {
     // Extract title, content, author, blogId, page, and limit from the request query
     const { title, content, author, blogId, page = 1, limit = 10 } = req.body;
-    console.log(req.user.username)
-
+  
     // Validate page and limit
     if (page < 1 || limit < 1) {
       return res.status(400).json({ message: "Invalid page or limit values" });
