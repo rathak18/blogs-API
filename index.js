@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const postRoutes = require('./routes/post.js');
 const userRoutes = require('./routes/user.js');
+const { globalLimiter, specificLimiter } = require('./utils/rateLimiter.js')
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
@@ -22,6 +23,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Middleware
 app.use(bodyParser.json());
+app.use(globalLimiter)
 
 // Routes
 app.use('/api', postRoutes);
