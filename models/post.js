@@ -6,6 +6,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    unique:true
   },
   content: {
     type: String,
@@ -13,6 +14,11 @@ const postSchema = new mongoose.Schema({
   },
   author: {
     type: String,
+    required: true,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
   createdAt: {

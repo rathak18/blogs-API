@@ -8,7 +8,7 @@ exports.createPost = async (req, res) => {
     if (!title || !content || !author) { 
       return res.status(400).json({ success: false, message: "Please provide title, content, and author for the blog" });
     }
-    const newPost = new Post({ title, content, author });
+    const newPost = new Post({ title, content, author ,  user: req.user._id});
     const savedPost = await newPost.save();
     res.status(201).json({ success: true, message: "Blog created successfully", savedPost });
   } catch (error) {
@@ -21,6 +21,7 @@ exports.getAllPosts = async (req, res, next) => {
   try {
     // Extract title, content, author, blogId, page, and limit from the request query
     const { title, content, author, blogId, page = 1, limit = 10 } = req.body;
+    console.log(req.user.username)
 
     // Validate page and limit
     if (page < 1 || limit < 1) {
@@ -48,7 +49,8 @@ exports.getAllPosts = async (req, res, next) => {
     // Fetch posts based on the constructed filter with pagination
     const posts = await Post.find(filter, { title: 1, content: 1, author: 1, _id: 1, createdAt: 1 })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .sort({_id:-1});
 
     if (!posts.length) {
       return res.status(404).json({ message: "Blogs not available" });
