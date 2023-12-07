@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const postRoutes = require('./routes/post.js');
 const userRoutes = require('./routes/user.js');
+const helmet = require('helmet');
+const cors = require('cors'); // Import the cors middleware
 const { globalLimiter, specificLimiter } = require('./utils/rateLimiter.js')
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -23,7 +25,11 @@ mongoose.connect(process.env.MONGODB_URI)
 
 // Middleware
 app.use(bodyParser.json());
+app.use(helmet())
 app.use(globalLimiter)
+
+// Enable CORS for all routes
+app.use(cors());
 
 // Routes
 app.use('/api', postRoutes);
