@@ -4,6 +4,7 @@ const Post = require('../models/post.js');
 exports.createPost = async (req, res) => {
   try {
     const { title, content, author } = req.body;
+
     if (!title || !content || !author) { 
       return res.status(400).json({ success: false, message: "Please provide title, content, and author for the blog" });
     }

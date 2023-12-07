@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const postRoutes = require('./routes/post.js');
-const customMiddleware = require('./middleware/auth.js'); // Adjust the path accordingly
+const userRoutes = require('./routes/user.js');
 require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api', postRoutes);
+app.use('/api', userRoutes);
 
 // Start the server
 app.listen(PORT, () => {
