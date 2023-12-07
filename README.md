@@ -14,4 +14,4 @@ Before you begin, ensure that you have the following installed:
 1. Clone the repository to your local machine:
 
    ```bash
-   git clone https://github.com/your-username/blogs-API.git
+   git clone https://github.com/rathak18/blogs-API.git
