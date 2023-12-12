@@ -37,6 +37,17 @@ app.use('/api', postRoutes);
 app.use('/api', userRoutes);
 
 // Start the server
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+// ... (rest of your code)
+
+// Close the server function
+const closeServer = () => {
+  server.close();
+  mongoose.connection.close();
+};
+
+module.exports.closeServer = closeServer;
+module.exports = { app, server, mongoose };

@@ -1,3 +1,4 @@
+const { isObjectIdOrHexString } = require('mongoose');
 const Post = require('../models/post.js');
 
 // Controller to create a new blog post
@@ -17,6 +18,7 @@ exports.createPost = async (req, res) => {
 };
 
 // Controller to get all blog posts
+
 exports.getAllPosts = async (req, res, next) => {
   try {
     // Extract title, content, author, blogId, page, and limit from the request query
@@ -32,6 +34,7 @@ exports.getAllPosts = async (req, res, next) => {
 
     // Build the filter object based on the provided parameters
     const filter = {};
+    
     if (title) {
       filter.title = { $regex: title, $options: 'i' }; // Case-insensitive search using regex
     }
@@ -45,11 +48,16 @@ exports.getAllPosts = async (req, res, next) => {
       filter._id = blogId;
     }
 
+    // If req.user is available and contains the user ID, add it to the filter
+    if (req.user && req.user._id) {
+      filter.user = req.user._id;
+    }
+
     // Fetch posts based on the constructed filter with pagination
     const posts = await Post.find(filter, { title: 1, content: 1, author: 1, _id: 1, createdAt: 1 })
       .skip(skip)
       .limit(limit)
-      .sort({_id:-1});
+      .sort({_id: -1});
 
     if (!posts.length) {
       return res.status(404).json({ message: "Blogs not available" });
@@ -60,6 +68,8 @@ exports.getAllPosts = async (req, res, next) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
 
 
 
@@ -90,8 +100,12 @@ exports.getAllBlogsDatewise = async (req, res) => {
       },
     };
 
+    if (req.user && req.user._id) {
+      filter.user = req.user._id;
+    }
+
     // Fetch posts based on the constructed filter
-    const posts = await Post.find(filter, { title: 1, content: 1, author: 1, _id: 1, createdAt: 1 });
+    const posts = await Post.find({...filter, },{ title: 1, content: 1, author: 1, _id: 1, createdAt: 1 });
 
     if (!posts.length) {
       return res.status(404).json({ message: "No blogs found within the specified date range" });
@@ -123,9 +137,15 @@ exports.updatePostById = async (req, res) => {
   try {
     const postId = req.params.id;
     const { title, content, author } = req.body;
+
+    const filter = {};
+    if (req.user && req.user._id) {
+      filter.user = req.user._id;
+    }
+    
     const updatedPost = await Post.findByIdAndUpdate(
       postId,
-      { title, content, author },
+      {...filter ,title, content, author },
       { new: true }
     );
     if (!updatedPost) {
