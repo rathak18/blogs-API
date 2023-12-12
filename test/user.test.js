@@ -1,7 +1,20 @@
 const request = require('supertest');
-const { app, closeServer } = require('../index');
+const { app } = require('../index');
 let authToken;
 let createdUser;
+let server;
+
+beforeAll((done) => {
+  server = app.listen(2000,() => {
+    done();
+  });
+});
+
+afterAll((done) => {
+  server.close(() => {
+    done();
+  });
+});
 
 describe('User API', () => {
 

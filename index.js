@@ -13,13 +13,18 @@ require('dotenv').config(); // Load environment variables from .env file
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log("db connected");
-  })
-  .catch((err) => {
-    console.log("error connecting db", err);
-  });
+const connectToDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log("DB connected");
+  } catch (error) {
+    console.error("Error connecting to DB:", error);
+    process.exit(1);
+  }
+};
+
+connectToDB();
+
 
 // Middleware
 app.use(bodyParser.json());
@@ -37,17 +42,8 @@ app.use('/api', postRoutes);
 app.use('/api', userRoutes);
 
 // Start the server
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-// ... (rest of your code)
-
-// Close the server function
-const closeServer = () => {
-  server.close();
-  mongoose.connection.close();
-};
-
-module.exports.closeServer = closeServer;
-module.exports = { app, server, mongoose };
+module.exports = { app, mongoose };
