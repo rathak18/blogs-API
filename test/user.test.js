@@ -29,7 +29,7 @@ describe('User API', () => {
     }
   });
 
-  it('should login the created user', async () => {
+  it('should login the user', async () => {
     const loginResponse = await request(app)
       .post('/api/login')
       .send({
@@ -45,6 +45,17 @@ describe('User API', () => {
 
     // Store the authentication token
     authToken = loginResponse.body.token;
+  });
+
+  it('should logout the user', async () => {
+    console.log(authToken,"authtoken");
+    const logoutResponse = await request(app)
+      .post('/api/logout')
+      .set({ Authorization:"Bearer"+ " " + authToken });
+
+    expect(logoutResponse.status).toBe(200);
+    expect(logoutResponse.body).toHaveProperty('success', true);
+    expect(logoutResponse.body).toHaveProperty('message', 'User logged out successfully');
   });
 
   it('should delete the created user', async () => {

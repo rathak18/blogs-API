@@ -39,10 +39,6 @@ exports.signup = async (req, res) => {
   }
 };
 
-
-
-
-
 // Login controller
 exports.login = async (req, res) => {
   try {
@@ -82,6 +78,7 @@ exports.login = async (req, res) => {
 exports.logout = async (req, res) => {
   try {
     const token = req.headers.authorization.split(' ')[1];
+    console.log('Token to be blacklisted:', token);
 
     // Add the token to the blacklist
     await addToBlacklist(token);
