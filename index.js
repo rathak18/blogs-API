@@ -1,11 +1,14 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const { connectToDB, mongoose } = require('./db'); 
 
 if (cluster.isMaster) {
   // Fork workers
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
+
+  connectToDB();
 
   cluster.on('exit', (worker, code, signal) => {
     console.log(`Worker ${worker.process.pid} died`);
@@ -29,17 +32,25 @@ if (cluster.isMaster) {
 
   app.set('view engine', 'ejs');
 
-  const connectToDB = async () => {
-    try {
-      await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-      console.log("DB connected");
-    } catch (error) {
-      console.error("Error connecting to DB:", error);
-      process.exit(1);
-    }
-  };
+//   const connectToDB = async () => {
+//   try {
+//     // Create a shared connection pool
+//     const mongooseOptions = {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//       maxPoolSize: numCPUs, // Set the pool size to the number of CPU cores
+//     };
 
-  connectToDB();
+//     await mongoose.connect(process.env.MONGODB_URI, mongooseOptions);
+//     console.log("DB connected");
+//   } catch (error) {
+//     console.error("Error connecting to DB:", error);
+//     process.exit(1);
+//   }
+// };
+
+
+//   connectToDB();
 
   app.use(bodyParser.json());
   app.use(helmet());
