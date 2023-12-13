@@ -68,6 +68,51 @@ describe('Blog API', () => {
     expect(blogResponse.status).toBe(200);
     expect(blogResponse.body).toHaveProperty('message', 'Post deleted successfully');
   });
+
+  it('should get all blog posts', async () => {
+    const response = await request(app)
+      .get('/api/getAllBlogs')
+      .set('Authorization', `Bearer ${authToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('message', 'Blogs fetched successfully');
+    expect(response.body).toHaveProperty('posts');
+    //expect(response.body.posts).toHaveLength(/* Set the expected length based on your test data */);
+  });
+  
+
+  it('should return 404 if no blogs are found within the specified date range', async () => {
+    // Set an invalid user ID to simulate no blogs found for that user
+    const invalidUserId = 'invalid_user_id';
+  
+    const fromDate = '2020-01-01';
+    const toDate = '2020-12-31';
+  
+    const response = await request(app)
+      .get('/api/getAllBlogsDatewise')
+      .set('Authorization', `Bearer ${authToken}`) // Use the valid user's token
+      .send({ fromDate, toDate, userId: invalidUserId }); // Use send to set the request body
+  
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'No blogs found within the specified date range');
+  });
+
+  it('should return 404 if no blogs match the specified criteria', async () => {
+    const invalidFilter = {
+      // Provide invalid filter criteria that are unlikely to match any blogs
+      title: '"title": "Noiod"',
+      content: 'InvalidContentThatShouldNotExist',
+      author: 'InvalidAuthorThatShouldNotExist',
+    };
+  
+    const response = await request(app)
+      .get('/api/getAllBlogs')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(invalidFilter);
+  
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('message', 'Blogs not available');
+  });
   
   
 });
