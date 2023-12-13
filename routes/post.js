@@ -8,6 +8,8 @@ const { authenticate } = require('../middleware/auth.js');
 
 // Create a new blog post
 router.post('/addBlog', authenticate, postController.createPost);
+router.post('/addFakeBlog', postController.createFakePost);
+
 
 // Get all blog posts
 router.get('/getAllBlogs',authenticate, postController.getAllPosts);
@@ -23,6 +25,11 @@ router.put('/updateBlog/:id',authenticate, postController.updatePostById);
 
 // Delete a blog post by ID
 router.delete('/deleteBlog/:id',authenticate, postController.deletePostById);
+
+//delete all post
+
+router.delete('/deleteAllPost',authenticate, postController.deleteAllPost);
+
 
 router.get('/protected', authenticate, (req, res) => {
     res.status(200).json({ message: 'This is a protected route', user: req.user });
