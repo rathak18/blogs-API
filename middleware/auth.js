@@ -1,8 +1,8 @@
 // middleware/auth.js
 
 const jwt = require('jsonwebtoken');
-const TokenBlacklist = require('../models/TokenBlacklist');
-const User = require('../models/user');
+const TokenBlacklist = require('../models/TokenBlacklist.model');
+const User = require('../models/user.model');
 
 // Helper function to validate and decode JWT token
 exports.decodeToken = async (token) => {

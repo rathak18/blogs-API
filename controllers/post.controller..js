@@ -1,5 +1,5 @@
-const Post = require('../models/post.js');
-const User = require('../models/user.js');
+const Post = require('../models/post.model.js');
+const User = require('../models/user.model.js');
 const faker = require('faker');
 
 // Controller to create a new blog post

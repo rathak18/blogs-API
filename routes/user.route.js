@@ -2,7 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
-const { signup, login, deleteUser,logout } = require('../controllers/user.js');
+const { signup, login, deleteUser,logout } = require('../controllers/user.controller.js');
 const { authenticate } = require('../middleware/auth.js');
 
 // Signup route

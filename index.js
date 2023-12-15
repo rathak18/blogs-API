@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const postRoutes = require('./routes/post.js');
-const userRoutes = require('./routes/user.js');
+const postRoutes = require('./routes/post.route.js');
+const userRoutes = require('./routes/user.route.js');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const { globalLimiter, specificLimiter } = require('./utils/rateLimiter.js');
-const Post = require('./models/post');
+const Post = require('./models/post.model.js');
 require('dotenv').config();
 
 
