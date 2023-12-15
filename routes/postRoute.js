@@ -1,7 +1,7 @@
 // post.routes.js
 const express = require('express');
 const router = express.Router();
-const postController = require('../controllers/post.controller..js');
+const postController = require('../controllers/post.controller.js');
 const { authenticate } = require('../middleware/auth.js');
 
 // Custom middleware for get, update, and delete routes
